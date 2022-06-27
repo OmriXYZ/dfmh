@@ -12,3 +12,4 @@ Some of the services I use:
       3. RDS - Amazon Relational Database Service (Integrating with MySQL)
   6. Messaging between users
   7. Email verification
+![dfmh-diagram](https://user-images.githubusercontent.com/86965496/175926953-2c5d8e08-9141-4e52-a4e7-2979cc94c6da.png)
