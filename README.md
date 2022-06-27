@@ -13,5 +13,6 @@ Some of the services I use:
   6. Messaging between users
   7. Email verification
 
- <font size=6>Flow Architecture</font> 
+#  <font size=6>Flow Architecture</font> 
+
 ![dfmh-diagram](https://user-images.githubusercontent.com/86965496/175926953-2c5d8e08-9141-4e52-a4e7-2979cc94c6da.png)
