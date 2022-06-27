@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="ISO-8859-1">
+<title>Donations list</title>
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.20.1/dist/bootstrap-table.min.css">
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+<script th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
+
+<script th:src="@{/js/form.js}"></script>
+
+
+<link rel="stylesheet" th:href="@{/css/style_home.css}">
+
+</head>
+<body>
+
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="#">Donate From Your Heart</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarText"
+				aria-controls="navbarText" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarText">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
+					<li class="nav-item"><a class="nav-link active"
+						th:href="@{/donations/list}">Donations</a></li>
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/donations/form}">Add a donation</a></li>
+						<li class="nav-item"><a class="nav-link"
+						th:href="@{/msg/list}">Messages</a></li>
+					<li class="nav-item"><a class="nav-link" th:href="@{/about}">About</a>
+					</li>
+					<div sec:authorize="hasRole('ROLE_ADMIN')">
+						<li class="nav-item"><a class="nav-link"
+							th:href="@{/users/list}"><b>User management</b></a></li>
+					</div>
+					<li class="nav-item"><a class="nav-link" th:href="@{/logout}">Logout</a>
+					</li>
+				</ul>
+				<span class="navbar-text"> Welcome <span
+					sec:authentication="principal.username"> User</span>
+				</span>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<h1></h1>
+
+		<div th:if="${errmsg}">
+			<body onload='errmsg();'/>
+		</div>
+
+		<div class="m-4">
+			<div class="toast" id="msg_toast">
+				<div class="toast-header">
+					<strong class="me-auto"><i
+						class="bi bi-shield-fill-exclamation"></i> Security message!</strong>
+
+					<button type="button" class="btn-close" data-bs-dismiss="toast"
+						aria-label="Close"></button>
+				</div>
+				<div class="toast-body">Can't send message to yourself</div>
+			</div>
+		</div>
+
+		<div class="row mb-2">
+			<div class="col-sm-3">
+			
+			<a
+				th:href="@{/donations/searchbyuser(userEmail=${#authentication.name})}"
+				class="btn btn-primary btn-sm"> To edit: My donations </a>
+			</div>
+			
+			<!-- <div class="col-5 col-sm-3">
+				<select
+					class="form-select form-select-sm" aria-label="Default select example"
+					th:onchange="'window.location.href = \'' + @{/donations/searchbydepart} + '?depart=\' + this.value ' ">
+					<option value="" disabled selected hidden>Filter by department</option>
+					<option th:each="depart :${departments}"
+					 th:selected="${depart == depart_selected}"
+					 th:value="${depart}"
+					 th:text="${depart}">
+				</select>
+			</div> -->
+
+		</div>
+
+
+
+
+
+
+		<table class="table table-bordered table-light table-hover" id="table">
+				<thead class="thead">
+					<tr>
+						<th>Name</th>
+						<th>Department
+						
+						<select
+					class="form-select form-select-sm" aria-label="Default select example"
+					th:onchange="'window.location.href = \'' + @{/donations/searchbydepart} + '?depart=\' + this.value ' ">
+					<option value="" disabled selected hidden>Filter by department</option>
+					<option th:each="depart :${departments}"
+					 th:selected="${depart == depart_selected}"
+					 th:value="${depart}"
+					 th:text="${depart}">
+				</select>
+						
+						</th>
+						<th>User</th>
+						<th>Date</th>
+						<th>Phone</th>
+						<th>MSG</th>
+						<th>IMG</th>
+						<div sec:authorize="hasRole('ROLE_ADMIN')">
+							<th>Delete</th>
+						</div>
+
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="tempDonation : ${donations}">
+						<td style="display: none;" th:text="${tempDonation.id}" />
+						<td th:text="${tempDonation.name}" />
+						<td th:text="${tempDonation.department}" />
+						<td th:if="${!tempDonation.hEmail}" th:text="${tempDonation.user}" />
+						<td th:if="${tempDonation.hEmail}" th:text="hiding" />
+						<td th:text="${tempDonation.dateFormat}" />
+						<td th:if="${!tempDonation.hPhone}" th:text="${tempDonation.phone}" />
+						<td th:if="${tempDonation.hPhone}" th:text="hiding" />
+
+					<td>
+
+						
+							
+							<a>
+							<button type="button" class="btn btn-primary"
+							data-bs-toggle="modal" th:attr="data-bs-target='#modal' + ${tempDonation.id}">
+							<i class="bi bi-send"></i>
+							</button></a>
+				
+
+						<div class="modal fade" th:id="'modal' + ${tempDonation.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel" th:if="${!tempDonation.hEmail}" th:text="'Send to: ' + ${tempDonation.user}">Send message to: </h5>
+        <h5 class="modal-title" id="exampleModalLabel" th:unless="${!tempDonation.hEmail}" th:text="'Send to: ' + 'anonymous'">Send message to: </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      		<form th:action="@{/msg/send}"
+			  th:object="${privateMessage}" method="POST">
+			  <input type="hidden" th:field="*{id}" />	  
+			 <input class="form-control" type="hidden"
+           th:value="${#authentication.getName()}" id="fromUser" name="fromUser"/>
+           <input class="form-control" type="hidden"
+           th:value="${tempDonation.user}" id="toUser" name="toUser"/>
+           <input class="form-control" type="hidden"
+           th:value="${tempDonation.name}" id="donationName" name="donationName"/>
+			  
+	      <div class="modal-body">
+	        <div class="mb-1">
+	            <label for="message-text" class="col-form-label">Message:</label>
+	            <textarea class="form-control" th:field="*{msg}" id="msg" name="msg" required></textarea>
+	          </div>
+	      </div>
+	      <div class="modal-footer">
+	        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:href=>Close</button> -->
+	        <button type="submit" class="btn btn-primary">Send</button>
+	      </div>
+      </form>
+    </div>
+  </div>
+</div>
+						
+						</td>
+
+					<td><a
+							th:href="@{/donations/images(donationId=${tempDonation.id})}"
+							class="btn btn-primary"> 
+							<i class="bi bi-images"></i>
+							 </a></td>
+							
+
+						<div sec:authorize="hasRole('ROLE_ADMIN')">
+							<td><a
+								th:href="@{/donations/delete(donationId=${tempDonation.id})}" 
+								class="btn btn-danger"
+								onclick="if (!(confirm('Are you sure you want to delete this donate?'))) return false">
+									<i class="bi bi-trash"></i>
+									</a></td>
+						</div>
+					</tr>
+				</tbody>
+			</table>
+
+
+
+	</div>
+
+<script th:src="@{/webjars/popper.js/2.5.4/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.min.js}"></script>
+<script src="https://unpkg.com/bootstrap-table@1.20.1/dist/bootstrap-table.min.js"></script>
+
+
+
+</body>
+</html>

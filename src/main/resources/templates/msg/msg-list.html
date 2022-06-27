@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="ISO-8859-1">
+<title>Donations list</title>
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+<link rel="stylesheet" th:href="@{/css/style_home.css}">
+
+</head>
+<body>
+
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="#">Donate From Your Heart</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarText"
+				aria-controls="navbarText" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarText">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/donations/list}">Donations</a></li>
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/donations/form}">Add a donation</a></li>
+					<li class="nav-item"><a class="nav-link active"
+						th:href="@{/msg/list}">Messages</a></li>
+					<li class="nav-item"><a class="nav-link" th:href="@{/about}">About</a>
+					</li>
+					<div sec:authorize="hasRole('ROLE_ADMIN')">
+						<li class="nav-item"><a class="nav-link"
+							th:href="@{/users/list}"><b>User management</b></a></li>
+					</div>
+					<li class="nav-item"><a class="nav-link" th:href="@{/logout}">Logout</a>
+					</li>
+				</ul>
+				<span class="navbar-text"> Welcome <span
+					sec:authentication="principal.username"> User</span>
+				</span>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<h1></h1>
+
+
+		<table class="table table-light">
+			<thead class="thead">
+				<tr>
+					<th>From</th>
+					<th>Date</th>
+					<th>Message content</th>
+					<th>Send msg back</th>
+					<th>Delete</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr th:each="tmpMsg : ${msgs}">
+					<td style="display: none;" th:text="${tmpMsg.id}" />
+					<td style="display: none;" th:text="${tmpMsg.toUser}" />
+					<td th:text="${tmpMsg.fromUser}" />
+					<td th:text="${tmpMsg.dateFormat}" />
+					<td><a>
+							<button type="button" class="btn btn-sm btn-primary"
+								data-bs-toggle="modal"
+								th:attr="data-bs-target='#modalsee' + ${tmpMsg.id}">
+								<i class="bi bi-chat-square-text"></i>
+							</button>
+					</a>
+
+
+
+						<div class="modal fade" th:id="'modalsee' + ${tmpMsg.id}"
+							tabindex="-1" aria-labelledby="exampleModalLabel"
+							aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLabel"
+											th:text="'From: ' + ${tmpMsg.fromUser}"></h5>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body">
+
+
+
+										<div class="card">
+											<div class="card-body">
+												<p class="card-text" th:text="${tmpMsg.msg}"></p>
+											</div>
+										</div>
+
+
+									</div>
+								</div>
+							</div>
+						</div></td>
+
+
+					<td><a>
+							<button type="button" class="btn btn-sm btn-primary"
+								data-bs-toggle="modal"
+								th:attr="data-bs-target='#modalsend' + ${tmpMsg.id}">
+								<i class="bi bi-send"></i>
+							</button>
+					</a>
+
+
+						<div class="modal fade" th:id="'modalsend' + ${tmpMsg.id}"
+							tabindex="-1" aria-labelledby="ModalLabel1"
+							aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="ModalLabel1"
+											th:text="'Send to: ' + ${tmpMsg.fromUser}">Send message
+											to:</h5>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<form th:action="@{/msg/sendback}" th:object="${privateMessage}"
+										method="POST">
+										<input type="hidden" th:field="*{id}" /> <input
+											class="form-control" type="hidden"
+											th:value="${#authentication.getName()}" id="fromUser"
+											name="fromUser" /> <input class="form-control" type="hidden"
+											th:value="${tmpMsg.fromUser}" id="toUser" name="toUser" />
+
+										<div class="modal-body">
+											<div class="mb-1">
+												<label class="col-form-label">Message:</label>
+												<textarea class="form-control" th:field="*{msg}" id="msg"
+													name="msg" required></textarea>
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button type="submit" class="btn btn-primary">Send</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div></td>
+
+					<td><a th:href="@{/msg/delete(msgId=${tmpMsg.id})}"
+						class="btn btn-danger btn-sm"
+						onclick="if (!(confirm('Are you sure you want to delete this message?'))) return false">
+							<i class="bi bi-trash"></i>
+					</a></td>
+
+				</tr>
+			</tbody>
+		</table>
+
+
+
+	</div>
+
+
+	<script th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
+	<script th:src="@{/webjars/popper.js/2.5.4/umd/popper.min.js}"></script>
+	<script th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.min.js}"></script>
+
+
+
+
+</body>
+</html>

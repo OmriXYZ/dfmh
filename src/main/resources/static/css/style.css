@@ -1,0 +1,99 @@
+html,
+body{
+ height: 100%;
+}
+
+body {
+  background: #222 url('../img/bg.jpeg') center center no-repeat;
+  background-size: cover;
+  color: white;
+
+  text-align: left;
+  display: flex;
+}
+
+#title {
+	left      : 50%;
+    top       : 65px;
+    position  : absolute;
+    transform : translate(-50%, -50%);
+	font-size : 65px;
+    font-size: 4vw;
+}
+
+.toast{
+    position: absolute; 
+    left      : 50%;
+    transform : translate(-50%, 85%);
+    background-color: rgba(65, 77, 99, 0.4);
+
+}
+
+#succmsg {
+	left      : 50%;
+    top       : 20%;
+    position  : absolute;
+    transform : translate(-50%, -50%);
+	font-size : 16px;
+
+}
+
+
+
+#loginForm {
+	margin: 38px;
+}
+
+#regForm {
+	margin: 10px;
+}
+
+.alert {
+	display:inline-block;
+}
+
+.card {
+	background-color: rgba(65, 77, 99, 0.4);
+	width: 400px;
+	align-items: center;
+	border-radius: 20px;
+	left      : 50%;
+    top       : 50%;
+    position  : absolute;
+    transform : translate(-50%, -50%);
+}
+
+.btn-primary {
+
+    background-color: rgba(13, 84, 189, 0.8);
+    border-color: #0d54bd;
+    font-weight: bold;
+}
+
+.badge {
+	background-color: rgba(13, 84, 189, 0.8);
+    border-color: #0d54bd;
+    font-weight: bold;
+}
+
+h1 {
+	
+  font-weight: bold;
+  font-size: 54px;
+  text-align: center;
+}
+
+#cover-caption {
+  width: 100%;
+}
+
+a:link, a:visited {
+  color: white;
+  text-decoration: none;
+}
+
+@font-face {
+    font-family: myFirstFont;
+    src: url('../fonts/Assistant-Bold.ttf');
+}
+

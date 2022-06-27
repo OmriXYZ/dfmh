@@ -1,0 +1,30 @@
+html,
+body{
+ height: 100%;
+}
+
+body {
+  background: #222 url('../img/bg.jpeg') center center no-repeat;
+  background-blend-mode: luminosity;
+  background-size: cover;
+  
+  color: white;
+  text-align: left;
+  align-items: center;
+  
+}
+
+.table {
+
+}
+
+.card {
+	background-color: rgba(65, 77, 99, 0.4);
+	width: 400px;
+	align-items: center;
+	border-radius: 20px;
+	left      : 50%;
+    top       : 50%;
+    position  : absolute;
+    transform : translate(-50%, -50%);
+}

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Donations list</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+    <link rel="stylesheet" th:href="@{/css/style_home.css}">
+    <link rel="stylesheet" th:href="@{/css/dataTables.bootstrap5.min.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <script src="https://kit.fontawesome.com/e7a57864bf.js" crossorigin="anonymous"></script>
+
+
+
+
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Donate From Your Heart</a>
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navbarText"
+                aria-controls="navbarText" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
+                <li class="nav-item"><a class="nav-link active"
+                                        th:href="@{/donations/list}">Donations</a></li>
+                <li class="nav-item"><a class="nav-link"
+                                        th:href="@{/donations/form}">Add a donation</a></li>
+                <li class="nav-item"><a class="nav-link"
+                                        th:href="@{/msg/list}">Messages</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/about}">About</a>
+                </li>
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{/users/list}"><b>User management</b></a></li>
+                </div>
+                <li class="nav-item"><a class="nav-link" th:href="@{/logout}">Logout</a>
+                </li>
+            </ul>
+            <span class="navbar-text"> Welcome <span
+                    sec:authentication="principal.username"> User</span>
+				</span>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="row mb-5">
+        <div class="card" id="cardd">
+            <div class="card-body">
+                <table id="donationsTables" class="table table-bordered table-light table-hover stripe">
+                    <!-- Header Table -->
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>User</th>
+                        <th>Date</th>
+                        <th>Phone</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <!-- Footer Table -->
+                    <tfoot>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>User</th>
+                        <th>Date</th>
+                        <th>Phone</th>
+                        <th></th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+                </div>
+    </div>
+
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-body">
+                        <i class="fa-solid fa-user-secret"></i> &nbsp The user has chosen to remain anonymous, You can send a message.
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+</div>
+
+
+
+
+<!--<div class="modal fade" th:id="'modal' + ${tempDonation.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+<!--    <div class="modal-dialog">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title" id="exampleModalLabel" th:if="${!tempDonation.hEmail}" th:text="'Send to: ' + ${tempDonation.user}">Send message to: </h5>-->
+<!--                <h5 class="modal-title" id="exampleModalLabel" th:unless="${!tempDonation.hEmail}" th:text="'Send to: ' + 'anonymous'">Send message to: </h5>-->
+<!--                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--            </div>-->
+<!--            <form th:action="@{/msg/send}"-->
+<!--                  th:object="${privateMessage}" method="POST">-->
+<!--                <input type="hidden" th:field="*{id}" />-->
+<!--                <input class="form-control" type="hidden"-->
+<!--                       th:value="${#authentication.getName()}" id="fromUser" name="fromUser"/>-->
+<!--                <input class="form-control" type="hidden"-->
+<!--                       th:value="${tempDonation.user}" id="toUser" name="toUser"/>-->
+<!--                <input class="form-control" type="hidden"-->
+<!--                       th:value="${tempDonation.name}" id="donationName" name="donationName"/>-->
+
+<!--                <div class="modal-body">-->
+<!--                    <div class="mb-1">-->
+<!--                        <label for="message-text" class="col-form-label">Message:</label>-->
+<!--                        <textarea class="form-control" th:field="*{msg}" id="msg" name="msg" required></textarea>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="modal-footer">-->
+<!--                    &lt;!&ndash; <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:href=>Close</button> &ndash;&gt;-->
+<!--                    <button type="submit" class="btn btn-primary">Send</button>-->
+<!--                </div>-->
+<!--            </form>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+
+
+
+
+
+
+
+
+<script th:src="@{/js/datatable/datatables.js}"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.0/js/dataTables.bootstrap5.min.js"></script>
+
+<style>
+
+
+
+
+
+</style>
+
+</body>
+</html>
