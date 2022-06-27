@@ -20,21 +20,21 @@ public class DenyController {
     @GetMapping(path = "/validation")
     public String checkingUser(@RequestParam("user") String user, Model theModel) {
         if (!userService.isExistUserByEmail(user) || userService.checkVerification(user)) //User not exist or user is valid
-            return "/login";
+            return "login";
         theModel.addAttribute("user", user);
-        return "/valid";
+        return "valid";
     }
 
     @GetMapping(path = "/error")
     public String error(Model theModel) {
         theModel.addAttribute("error", true);
-        return "/login";
+        return "login";
     }
 
     @PostMapping("/postvalidation")
     public String checkCodeValid(@RequestParam("token") String token, @RequestParam("email") String email) {
         userService.checkToken(token, email);
-        return "/login";
+        return "login";
 
     }
 
