@@ -1,4 +1,4 @@
-# dfmh
+# Java web application project - Donate from my heart
 The first project I built in **spring boot**, a web application, gives the user the ability to upload donations he wants to donate.\
 Some of the services I use:
 
